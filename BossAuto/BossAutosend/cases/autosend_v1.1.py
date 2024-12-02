@@ -3,11 +3,19 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+import time
+import random
 
 # 实例化Chrome浏览器
 wd = webdriver.Chrome()
 # 设置隐性等待时间为10秒
 wd.implicitly_wait(10)
+
+
+# 创建时停
+def random_sleep(min_seconds, max_seconds):
+    time.sleep(random.uniform(min_seconds, max_seconds))
+
 
 # 打开Boss直聘登录页面
 wd.get('https://www.zhipin.com/web/user/?ka=header-login')
@@ -57,6 +65,8 @@ while i:
         i = 1
         print(e)
 
+random_sleep(2, 5)
+
 i = 1
 while i:
     try:
@@ -83,6 +93,7 @@ while var == 1:
         ActionChains(wd).click(job).perform()
         # 跳转到新标签页
         wd.switch_to.window(wd.window_handles[-1])
+        random_sleep(1, 3)
         # 等待沟通按钮可见
         try:
             button = WebDriverWait(wd, 10).until(
@@ -93,6 +104,7 @@ while var == 1:
             if b_text == "立即沟通":
                 ActionChains(wd).move_to_element(button).perform()
                 ActionChains(wd).click(button).perform()
+                random_sleep(1, 3)
                 # 等待关闭按钮可见
                 try:
                     close_button = WebDriverWait(wd, 10).until(
@@ -101,12 +113,14 @@ while var == 1:
                     ActionChains(wd).move_to_element(close_button).perform()
                     ActionChains(wd).click(close_button).perform()
                     var = 1
+                    random_sleep(1, 4)
                 # 关闭按钮不可见
                 except Exception as e:
                     print('close_button未找到', e)
                     var = 1
 
                 print(wd.title, "————投递完成")
+                random_sleep(1, 3)
                 # 返回原标签页
                 wd.close()
                 wd.switch_to.window(default_window)
@@ -131,6 +145,7 @@ while var == 1:
             By.CSS_SELECTOR, 'li[class=active]'), 'class', 'active')
         )
         var = 1
+        random_sleep(2, 5)
     # 下一页按钮不可见
     except Exception as e:
         print('close_button未找到', e)
